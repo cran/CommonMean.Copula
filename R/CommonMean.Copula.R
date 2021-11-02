@@ -6,7 +6,7 @@
 #' @param Sigma2 Standard deviation of outcome 2.
 #' @param rho Correlation coefficient between outcomes.
 #' @param copula The copula to be used with possible options \code{"Clayton"}, \code{"FGM"}, and \code{"normal"}.
-#' @description Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) for details under the Farlie-Gumbel-Morgenstern (FGM) copula.
+#' @description Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) and Shih et al. (2021) for details under the Farlie-Gumbel-Morgenstern (FGM) and general copulas, respectively.
 #' @details We apply \code{"optim"} routine to maximize the log-likelihood function. In addition, boundary corrected correlations will be used (Shih et al., 2019).
 #' @return \item{Outcome 1}{Outcome 1.}
 #' \item{Outcome 2}{Outcome 2.}
@@ -21,6 +21,7 @@
 #' \item{Log-likelihood values}{Fitted log-likelihood values.}
 #'
 #' @references Shih J-H, Konno Y, Chang Y-T, Emura T (2019) Estimation of a common mean vector in bivariate meta-analysis under the FGM copula, Statistics 53(3): 673-95.
+#' @references Shih J-H, Konno Y, Emura T (2021-) Copula-based estimation methods for a common mean vector for bivariate meta-analyses, under review.
 #' @importFrom stats optim pnorm qnorm uniroot
 #' @importFrom pracma integral2
 #' @importFrom mvtnorm dmvnorm

@@ -33,7 +33,7 @@ CommonMean.Copula(Y1, Y2, Sigma1, Sigma2, rho, copula = "Clayton")
 \item{Log-likelihood values}{Fitted log-likelihood values.}
 }
 \description{
-Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) for details under the Farlie-Gumbel-Morgenstern (FGM) copula.
+Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) and Shih et al. (2021) for details under the Farlie-Gumbel-Morgenstern (FGM) and general copulas, respectively.
 }
 \details{
 We apply \code{"optim"} routine to maximize the log-likelihood function. In addition, boundary corrected correlations will be used (Shih et al., 2019).
@@ -49,4 +49,6 @@ CommonMean.Copula(Y1,Y2,Sigma1,Sigma2,rho) # input
 }
 \references{
 Shih J-H, Konno Y, Chang Y-T, Emura T (2019) Estimation of a common mean vector in bivariate meta-analysis under the FGM copula, Statistics 53(3): 673-95.
+
+Shih J-H, Konno Y, Emura T (2021-) Copula-based estimation methods for a common mean vector for bivariate meta-analyses, under review.
 }
