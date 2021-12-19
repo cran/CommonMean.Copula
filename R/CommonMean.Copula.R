@@ -5,7 +5,7 @@
 #' @param Sigma1 Standard deviation of outcome 1.
 #' @param Sigma2 Standard deviation of outcome 2.
 #' @param rho Correlation coefficient between outcomes.
-#' @param copula The copula to be used with possible options \code{"Clayton"}, \code{"FGM"}, and \code{"normal"}.
+#' @param copula The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"FGM"}, and \code{"normal"}.
 #' @description Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) and Shih et al. (2021) for details under the Farlie-Gumbel-Morgenstern (FGM) and general copulas, respectively.
 #' @details We apply \code{"optim"} routine to maximize the log-likelihood function. In addition, boundary corrected correlations will be used (Shih et al., 2019).
 #' @return \item{Outcome 1}{Outcome 1.}
@@ -65,6 +65,37 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
     theta.vec = sapply(rho.BC,uni_cor)
 
   }
+  if (copula == "Gumbel") {
+
+    c_density = function(u,v,theta) {
+
+      a1 = 1/u*(-log(u))^(theta-1)
+      a2 = 1/v*(-log(v))^(theta-1)
+      a3 = exp(-((-log(u))^theta+(-log(v))^theta)^(1/theta))
+      a4 = ((-log(u))^theta+(-log(v))^theta)^(1/theta-2)
+      a5 = (theta-1)+((-log(u))^theta+(-log(v))^theta)^(1/theta)
+
+      a1*a2*a3*a4*a5
+
+    }
+
+    ### boundary correction
+    rho.BC = pmax(0.001,rho)
+
+    uni_cor = function(rho) {
+
+      inv_f = function(theta) {
+
+        cor_f = function(u,v) {qnorm(u)*qnorm(v)*c_density(u,v,theta)}
+        integral2(cor_f,0,1,0,1)$Q-rho
+
+      }
+      uniroot(inv_f,c(1.001,12),extendInt = "yes")$root
+
+    }
+    theta.vec = sapply(rho.BC,uni_cor)
+
+  }
   if (copula == "FGM") {
 
     c_density = function(u,v,theta) {
@@ -84,6 +115,13 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
 
     Phi1 = pnorm((Y1-Mu1)/Sigma1)
     Phi2 = pnorm((Y2-Mu2)/Sigma2)
+
+    if (copula == "Gumbel") {
+
+      Phi1 = pmin(0.999,Phi1)
+      Phi2 = pmin(0.999,Phi2)
+
+    }
 
     temp1 = log(c_density(Phi1,Phi2,theta.vec))
     temp2 = ((Y1-Mu1)/Sigma1)^2/2
@@ -137,12 +175,12 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
   V = solve(-res$hessian)
 
   CommonMean1_res = c(estimate = res$par[1],
-                      SE = sqrt(V[1]),
+                      SE = sqrt(V[1,1]),
                       Lower = res$par[1]-qnorm(1-0.05/2)*sqrt(V[1,1]),
                       Upper = res$par[1]+qnorm(1-0.05/2)*sqrt(V[1,1]))
 
   CommonMean2_res = c(estimate = res$par[2],
-                      SE = sqrt(V[2]),
+                      SE = sqrt(V[2,2]),
                       Lower = res$par[2]-qnorm(1-0.05/2)*sqrt(V[2,2]),
                       Upper = res$par[2]+qnorm(1-0.05/2)*sqrt(V[2,2]))
 

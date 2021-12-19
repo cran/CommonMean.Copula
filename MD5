@@ -1,6 +1,6 @@
-9bca870eb19e19b1467bf3bc66f6bbcf *DESCRIPTION
+3eb3af739b68a910d0140a7fe739adbb *DESCRIPTION
 719ea1e3c803bba6df0478b5058684ae *NAMESPACE
-c7ac7f21c3de39712e0176a6f35a6abe *R/CommonMean.Copula.R
-0a275adbdc9fa92f26d0097a12bc47a4 *build/partial.rdb
-19a02b9c230f622406e878c154e7b258 *man/CommonMean.Copula-package.rd
-4455c0bbf63d4cf2996c66bee67adb81 *man/CommonMean.Copula.Rd
+ae809865e04846d01405b2a9ba03f554 *R/CommonMean.Copula.R
+79bb465f59933830eef4ad8d3b672d1d *build/partial.rdb
+6054ee5c78ba73e511b614d3f1c53e34 *man/CommonMean.Copula-package.rd
+4518e6e423e04324148cd75e81c98d54 *man/CommonMean.Copula.Rd

@@ -17,7 +17,7 @@ CommonMean.Copula(Y1, Y2, Sigma1, Sigma2, rho, copula = "Clayton")
 
 \item{rho}{Correlation coefficient between outcomes.}
 
-\item{copula}{The copula to be used with possible options \code{"Clayton"}, \code{"FGM"}, and \code{"normal"}.}
+\item{copula}{The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"FGM"}, and \code{"normal"}.}
 }
 \value{
 \item{Outcome 1}{Outcome 1.}

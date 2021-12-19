@@ -17,6 +17,6 @@ Maintainer: \packageMaintainer{CommonMean.Copula}
 }
 \references{
 Shih J-H, Konno Y, Chang Y-T, Emura T (2019) Estimation of a common mean vector in bivariate meta-analysis under the FGM copula, Statistics 53(3): 673-95.
+
 Shih J-H, Konno Y, Emura T (2021-) Copula-based estimation methods for a common mean vector for bivariate meta-analyses, under review.
 }
-
