@@ -17,7 +17,7 @@ CommonMean.Copula(Y1, Y2, Sigma1, Sigma2, rho, copula = "Clayton")
 
 \item{rho}{Correlation coefficient between outcomes.}
 
-\item{copula}{The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"FGM"}, and \code{"normal"}.}
+\item{copula}{The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"Frank"}, \code{"FGM"}, and \code{"normal"}.}
 }
 \value{
 \item{Outcome 1}{Outcome 1.}
@@ -37,6 +37,9 @@ Estimate the common mean vector under copula models with known correlation. A ma
 }
 \details{
 We apply \code{"optim"} routine to maximize the log-likelihood function. In addition, boundary corrected correlations will be used (Shih et al., 2019).
+}
+\note{
+When \code{rho} is 1 or -1, there are some computational issues since the copula parameter may correspond to infinite or negative infinite under some copulas. For the Clayton copula, if \code{rho} > 0.95, it will be approximated by 0.95. For the Frank copula, if \code{rho} > 0.95 or \code{rho} < -0.95, it will be approximated by 0.95 or -0.95, respectively.
 }
 \examples{
 library(CommonMean.Copula)

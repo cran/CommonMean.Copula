@@ -5,7 +5,7 @@
 #' @param Sigma1 Standard deviation of outcome 1.
 #' @param Sigma2 Standard deviation of outcome 2.
 #' @param rho Correlation coefficient between outcomes.
-#' @param copula The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"FGM"}, and \code{"normal"}.
+#' @param copula The copula to be used with possible options \code{"Clayton"}, \code{"Gumbel"}, \code{"Frank"}, \code{"FGM"}, and \code{"normal"}.
 #' @description Estimate the common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. See Shih et al. (2019) and Shih et al. (2021) for details under the Farlie-Gumbel-Morgenstern (FGM) and general copulas, respectively.
 #' @details We apply \code{"optim"} routine to maximize the log-likelihood function. In addition, boundary corrected correlations will be used (Shih et al., 2019).
 #' @return \item{Outcome 1}{Outcome 1.}
@@ -20,6 +20,7 @@
 #' \item{V}{Covariance matrix of the common mean vector estimate.}
 #' \item{Log-likelihood values}{Fitted log-likelihood values.}
 #'
+#' @note When \code{rho} is 1 or -1, there are some computational issues since the copula parameter may correspond to infinite or negative infinite under some copulas. For the Clayton copula, if \code{rho} > 0.95, it will be approximated by 0.95. For the Frank copula, if \code{rho} > 0.95 or \code{rho} < -0.95, it will be approximated by 0.95 or -0.95, respectively.
 #' @references Shih J-H, Konno Y, Chang Y-T, Emura T (2019) Estimation of a common mean vector in bivariate meta-analysis under the FGM copula, Statistics 53(3): 673-95.
 #' @references Shih J-H, Konno Y, Emura T (2021-) Copula-based estimation methods for a common mean vector for bivariate meta-analyses, under review.
 #' @importFrom stats optim pnorm qnorm uniroot
@@ -50,6 +51,7 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
 
     ### boundary correction
     rho.BC = pmax(0.001,rho)
+    rho.BC.temp = pmin(0.95,rho.BC)
 
     uni_cor = function(rho) {
 
@@ -62,7 +64,7 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
       uniroot(inv_f,c(0.001,12),extendInt = "yes")$root
 
     }
-    theta.vec = sapply(rho.BC,uni_cor)
+    theta.vec = sapply(rho.BC.temp,uni_cor)
 
   }
   if (copula == "Gumbel") {
@@ -90,10 +92,36 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
         integral2(cor_f,0,1,0,1)$Q-rho
 
       }
-      uniroot(inv_f,c(1.001,12),extendInt = "yes")$root
+      uniroot(inv_f,c(1.001,6),extendInt = "yes")$root
 
     }
     theta.vec = sapply(rho.BC,uni_cor)
+
+  }
+  if (copula == "Frank") {
+
+    c_density = function(u,v,theta) {
+
+      theta*(1-exp(-theta))*exp(-theta*(u+v))/((1-exp(-theta))-(1-exp(-theta*u))*(1-exp(-theta*v)))^2
+
+    }
+
+    ### boundary correction
+    rho.BC = rho
+    rho.BC.temp = pmin(0.95,pmax(-0.95,rho.BC))
+
+    uni_cor = function(rho) {
+
+      inv_f = function(theta) {
+
+        cor_f = function(u,v) {qnorm(u)*qnorm(v)*c_density(u,v,theta)}
+        integral2(cor_f,0,1,0,1)$Q-rho
+
+      }
+      uniroot(inv_f,c(-30,30),extendInt = "yes")$root
+
+    }
+    theta.vec = sapply(rho.BC.temp,uni_cor)
 
   }
   if (copula == "FGM") {

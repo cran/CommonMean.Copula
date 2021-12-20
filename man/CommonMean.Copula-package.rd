@@ -5,7 +5,7 @@
 \packageTitle{CommonMean.Copula}
 }
 \description{
-Estimate bivariate common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. In the current version, available copulas are the Clayton, Farlie-Gumbel-Morgenstern (FGM), and normal copulas. See Shih et al. (2019) and Shih et al. (2021) for details under the FGM and general copulas, respectively.
+Estimate bivariate common mean vector under copula models with known correlation. A maximum likelihood estimation procedure is employed. In the current version, available copulas are the Clayton, Gumbel, Frank, Farlie-Gumbel-Morgenstern (FGM), and normal copulas. See Shih et al. (2019) and Shih et al. (2021) for details under the FGM and general copulas, respectively.
 }
 \details{
 The method implemented in this package can be used for bivariate meta-analyses. See Shih et al. (2019) and Shih et al. (2021) for the example of bivariate entrance exam data analysis.
