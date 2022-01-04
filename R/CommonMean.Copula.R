@@ -23,7 +23,7 @@
 #' @note When \code{rho} is 1 or -1, there are some computational issues since the copula parameter may correspond to infinite or negative infinite under some copulas. For the Clayton copula, if \code{rho} > 0.95, it will be approximated by 0.95. For the Frank copula, if \code{rho} > 0.95 or \code{rho} < -0.95, it will be approximated by 0.95 or -0.95, respectively.
 #' @references Shih J-H, Konno Y, Chang Y-T, Emura T (2019) Estimation of a common mean vector in bivariate meta-analysis under the FGM copula, Statistics 53(3): 673-95.
 #' @references Shih J-H, Konno Y, Emura T (2021-) Copula-based estimation methods for a common mean vector for bivariate meta-analyses, under review.
-#' @importFrom stats optim pnorm qnorm uniroot
+#' @importFrom stats optim pnorm qnorm uniroot runif
 #' @importFrom pracma integral2
 #' @importFrom mvtnorm dmvnorm
 #' @export
@@ -180,11 +180,25 @@ CommonMean.Copula = function(Y1,Y2,Sigma1,Sigma2,rho,copula = "Clayton") {
   }
 
   ini = c(sum(Y1/Sigma1^2)/sum(1/Sigma1^2),sum(Y2/Sigma2^2)/sum(1/Sigma2^2))
+  try_ini = ini
 
   if (copula != "normal") {
 
-    res = optim(ini,function(para) sum(general_LLH(para)),
-                control = list(fnscale = -1),hessian = TRUE)
+    repeat {
+
+      res = try(optim(try_ini,function(para) sum(general_LLH(para)),
+                      control = list(fnscale = -1),hessian = TRUE))
+      if (class(res) == "try-error") {
+
+        rand1 = runif(1,-abs(ini[1]),abs(ini[1]))/5
+        rand2 = runif(1,-abs(ini[2]),abs(ini[2]))/5
+        try_ini = ini + c(rand1,rand2)
+        next
+
+      } else {break}
+
+    }
+
     LLHV = general_LLH(res$par)
     LLHV[n+1] = sum(LLHV)
 
